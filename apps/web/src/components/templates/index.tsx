@@ -63,7 +63,6 @@ export const HomeTemplate: React.FC<HomeTemplateProps> = ({ username }) => {
           </>
         )}
       </main>
-
       <footer className="text-caption mt-10 text-center">
         <p>&copy; 2024 게임 포털. 모든 권리 보유.</p>
       </footer>

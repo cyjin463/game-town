@@ -14,8 +14,8 @@ export const Header = ({
   setIsAuthModalOpen,
 }: HeaderProps) => {
   return (
-    <header className="mb-8 text-center">
-      <div className="mb-2 flex flex-col items-center gap-4 md:flex-row md:justify-between">
+    <header className="w-full flex justify-end py-4 px-5">
+      <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
         <div className="shrink-0 text-center md:order-last">
           {isLoggedIn ? (
             <div className="flex flex-col items-center gap-2 sm:flex-row">

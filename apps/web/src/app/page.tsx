@@ -1,7 +1,7 @@
 "use client";
 
 import { HomeTemplate } from "@/components/templates";
-import { AuthModal } from "@/components/organisms";
+import { AuthModal } from "@/shared/organisms/Modal/AuthModal";
 import { Header } from "@/shared/Header";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";

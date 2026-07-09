@@ -8,7 +8,8 @@ interface AuthFormProps {
   mode: "login" | "register";
   onSubmit: (data: AuthData) => void;
   onToggleMode: () => void;
-  loading?: boolean;
+  isPending?: boolean;
+  submitError?: string;
 }
 
 interface AuthData {
@@ -22,7 +23,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   mode,
   onSubmit,
   onToggleMode,
-  loading = false,
+  isPending = false,
+  submitError,
 }) => {
   const [formData, setFormData] = useState<AuthData>({
     username: "",
@@ -132,11 +134,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({
           type="submit"
           variant="primary"
           size="large"
-          disabled={loading}
+          disabled={isPending}
           className="mt-2 w-full"
         >
-          {loading ? "처리중..." : mode === "login" ? "로그인" : "회원가입"}
+          {isPending ? "처리중..." : mode === "login" ? "로그인" : "회원가입"}
         </Button>
+        {submitError && (
+          <p className="text-error mt-2 text-center text-sm">{submitError}</p>
+        )}
       </form>
 
       <div className="mt-6 text-center">
