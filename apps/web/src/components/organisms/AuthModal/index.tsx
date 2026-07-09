@@ -62,10 +62,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <div className="overlay" onClick={onClose}>
-      <div
-        className="relative max-h-[90vh] w-full max-w-modal overflow-y-auto rounded-2xl bg-surface p-4 sm:p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
         <button className="icon-button" onClick={onClose}>
           ×
         </button>

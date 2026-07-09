@@ -19,7 +19,7 @@ export const Header = ({
         <div className="shrink-0 text-center md:order-last">
           {isLoggedIn ? (
             <div className="flex flex-col items-center gap-2 sm:flex-row">
-              <span className="text-sm font-bold text-foreground sm:text-base">
+              <span className="text-user-greeting">
                 {username}님 환영합니다!
               </span>
               <Button variant="secondary" size="small" onClick={handleLogout}>

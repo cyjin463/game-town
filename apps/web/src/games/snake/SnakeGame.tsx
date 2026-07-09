@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/shared/atoms/Button";
 import { useSubmitScoreMutation } from "@/hooks/useScores";
+import { readCssVar, readSnakeRgb, tokenVar } from "@/lib/design-tokens";
 
 interface Position {
   x: number;
@@ -329,12 +330,16 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({
     };
 
     const updateDisplay = () => {
-      // 캔버스 클리어
-      ctx.fillStyle = "#f0f0f0";
+      const canvasBg = readCssVar(tokenVar.canvas);
+      const gridLine = readCssVar(tokenVar.canvasGridLine);
+      const obstacleColor = readCssVar(tokenVar.gameObstacle);
+      const foodColor = readCssVar(tokenVar.gameFood);
+      const [snakeR, snakeG, snakeB] = readSnakeRgb();
+
+      ctx.fillStyle = canvasBg;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // 그리드 그리기
-      ctx.strokeStyle = "#e0e0e0";
+      ctx.strokeStyle = gridLine;
       ctx.lineWidth = 1;
       for (let i = 0; i <= game.gridWidth; i++) {
         ctx.beginPath();
@@ -351,7 +356,7 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({
 
       // 장애물 그리기
       game.obstacles.forEach((obstacle) => {
-        ctx.fillStyle = "#ff0000";
+        ctx.fillStyle = obstacleColor;
         for (let dx = 0; dx < obstacle.width; dx++) {
           for (let dy = 0; dy < obstacle.height; dy++) {
             ctx.fillRect(
@@ -368,7 +373,7 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({
       game.snake.forEach((segment, index) => {
         // 색상 그라데이션 (머리는 어둡게, 꼬리는 밝게)
         const alpha = 1 - (index / game.snake.length) * 0.4;
-        ctx.fillStyle = `rgba(51, 51, 51, ${alpha})`;
+        ctx.fillStyle = `rgba(${snakeR}, ${snakeG}, ${snakeB}, ${alpha})`;
 
         // 네모 모양으로 그리기
         ctx.fillRect(
@@ -381,7 +386,7 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({
 
       // 먹이 그리기 (네모)
       if (game.food) {
-        ctx.fillStyle = "#00ff00";
+        ctx.fillStyle = foodColor;
         ctx.fillRect(
           game.food.x * game.gridSize + 1,
           game.food.y * game.gridSize + 1,
@@ -580,9 +585,7 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({
         <div className="overlay">
           <div className="overlay-panel">
             <h2 className="heading-danger mb-3">게임 오버!</h2>
-            <p className="mb-6 text-xl font-semibold text-foreground">
-              점수: {finalScore}
-            </p>
+            <p className="text-score mb-6">점수: {finalScore}</p>
             <div className="flex flex-row items-center gap-3">
               <Button onClick={restartGame} size="medium" className="w-[120px]">
                 다시 시작

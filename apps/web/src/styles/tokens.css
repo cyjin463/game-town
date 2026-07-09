@@ -62,6 +62,11 @@
   --color-snake-body: var(--primitive-zinc-500);
   --color-snake-food: var(--primitive-zinc-400);
 
+  --color-canvas-grid-line: var(--primitive-neutral-200);
+  --color-game-obstacle: var(--color-danger);
+  --color-game-snake: var(--color-snake-head);
+  --color-game-food: #22c55e;
+
   /* Radius */
   --radius-sm: 0.125rem;
   --radius-md: 0.375rem;

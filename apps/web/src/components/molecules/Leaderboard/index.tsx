@@ -18,7 +18,7 @@ export function Leaderboard() {
     return (
       <section className="card-panel mt-8">
         <h2 className="heading-section mb-4">리더보드</h2>
-        <p className="text-sm text-danger">리더보드를 불러오지 못했습니다.</p>
+        <p className="text-error text-sm">리더보드를 불러오지 못했습니다.</p>
       </section>
     );
   }
@@ -41,7 +41,7 @@ export function Leaderboard() {
             <span className="font-medium text-foreground">
               {entry.rank}. {entry.username}
             </span>
-            <span className="font-bold text-accent">{entry.score}점</span>
+            <span className="text-accent">{entry.score}점</span>
           </li>
         ))}
       </ol>
