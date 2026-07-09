@@ -1,0 +1,1 @@
+export { SnakeGameTemplate } from "./templates";

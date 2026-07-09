@@ -81,8 +81,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   };
 
   return (
-    <div className="card-form">
-      <h2 className="heading-form">
+    <div className="card w-full max-w-form p-6 sm:p-8">
+      <h2 className="mb-6 text-center text-2xl font-bold text-foreground">
         {mode === "login" ? "로그인" : "회원가입"}
       </h2>
       <form onSubmit={handleSubmit}>
@@ -147,7 +147,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       <div className="mt-6 text-center">
         <p className="text-caption">
           {mode === "login" ? "계정이 없으신가요?" : "이미 계정이 있으신가요?"}
-          <button type="button" onClick={onToggleMode} className="link-inline">
+          <button
+            type="button"
+            onClick={onToggleMode}
+            className="ml-1 cursor-pointer border-none bg-transparent p-0 text-sm text-foreground-muted underline hover:text-foreground-link"
+          >
             {mode === "login" ? "회원가입" : "로그인"}
           </button>
         </p>

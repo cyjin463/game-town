@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
-  variant?: "primary" | "secondary" | "danger";
+  variant?: "primary" | "secondary";
   size?: "small" | "medium" | "large";
   disabled?: boolean;
   className?: string;
@@ -14,7 +14,6 @@ interface ButtonProps {
 const variantClasses = {
   primary: "btn-primary",
   secondary: "btn-secondary",
-  danger: "btn-danger",
 };
 
 const sizeClasses = {

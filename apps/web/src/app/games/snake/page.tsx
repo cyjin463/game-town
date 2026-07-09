@@ -1,12 +1,14 @@
-import { HomeTemplate } from "@/components/Home/templates";
+"use client";
+
+import { SnakeGameTemplate } from "@/components/games/snake";
 import { Header } from "@/shared/Header";
 import { Footer } from "@/shared/Footer";
 
-export default function HomePage() {
+export default function SnakeGamePage() {
   return (
     <>
       <Header/>
-      <HomeTemplate />
+      <SnakeGameTemplate />
       <Footer />
     </>
   );

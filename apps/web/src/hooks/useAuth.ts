@@ -37,7 +37,6 @@ export function useAuth() {
 
   return {
     username,
-    token,
     isLoggedIn: Boolean(username && token),
     isReady,
     login,

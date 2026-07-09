@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { AuthForm } from "@/components/molecules";
+import { AuthForm } from "@/shared/molecules/AuthForm";
 import { useLoginMutation, useRegisterMutation } from "@/hooks/useAuthMutations";
 import type { AuthSession } from "@/hooks/useAuth";
 
@@ -91,8 +91,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <div className="overlay" onClick={onClose}>
-      <div className="modal-panel" onClick={(e) => e.stopPropagation()}>
-        <button className="icon-button" onClick={onClose}>
+      <div
+        className="relative max-h-[90vh] w-full max-w-modal overflow-y-auto rounded-2xl bg-surface p-4 sm:p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border-none bg-transparent text-2xl text-foreground-subtle transition-colors hover:bg-surface-subtle hover:text-foreground"
+          onClick={onClose}
+        >
           ×
         </button>
         <AuthForm
