@@ -1,0 +1,93 @@
+:root {
+  /* Primitive palette */
+  --primitive-white: #ffffff;
+  --primitive-neutral-50: #f9fafb;
+  --primitive-neutral-100: #f3f4f6;
+  --primitive-neutral-200: #e5e7eb;
+  --primitive-neutral-300: #d1d5db;
+  --primitive-neutral-400: #9ca3af;
+  --primitive-neutral-500: #6b7280;
+  --primitive-neutral-600: #4b5563;
+  --primitive-neutral-700: #374151;
+  --primitive-neutral-800: #1f2937;
+  --primitive-neutral-900: #111827;
+  --primitive-neutral-100-page: #f5f5f5;
+  --primitive-neutral-300-page: #d4d4d4;
+
+  --primitive-zinc-400: #a1a1aa;
+  --primitive-zinc-500: #71717a;
+  --primitive-zinc-600: #52525b;
+  --primitive-zinc-700: #3f3f46;
+  --primitive-zinc-800: #27272a;
+
+  --primitive-indigo-600: #4f46e5;
+  --primitive-red-500: #ef4444;
+
+  /* Semantic colors */
+  --color-page-from: var(--primitive-neutral-100-page);
+  --color-page-to: var(--primitive-neutral-300-page);
+
+  --color-surface: var(--primitive-white);
+  --color-surface-muted: var(--primitive-neutral-50);
+  --color-surface-subtle: var(--primitive-neutral-100);
+  --color-surface-soft: var(--primitive-neutral-200);
+
+  --color-foreground: var(--primitive-neutral-800);
+  --color-foreground-muted: var(--primitive-neutral-600);
+  --color-foreground-subtle: var(--primitive-neutral-500);
+  --color-foreground-disabled: var(--primitive-neutral-400);
+  --color-foreground-inverse: var(--primitive-white);
+  --color-foreground-link-hover: var(--primitive-neutral-900);
+
+  --color-border: var(--primitive-neutral-200);
+  --color-border-strong: var(--primitive-neutral-300);
+  --color-border-focus: var(--primitive-neutral-500);
+  --color-border-game: var(--primitive-zinc-800);
+  --color-border-brand: var(--primitive-zinc-600);
+  --color-border-danger: var(--primitive-red-500);
+
+  --color-brand-400: var(--primitive-zinc-400);
+  --color-brand-500: var(--primitive-zinc-500);
+  --color-brand-600: var(--primitive-zinc-600);
+  --color-brand-700: var(--primitive-zinc-700);
+  --color-brand-800: var(--primitive-zinc-800);
+
+  --color-accent: var(--primitive-indigo-600);
+  --color-danger: var(--primitive-red-500);
+  --color-overlay: rgb(0 0 0 / 0.8);
+  --color-ring-focus: rgb(107 114 128 / 0.2);
+
+  --color-canvas: var(--primitive-neutral-100);
+  --color-snake-head: var(--primitive-zinc-800);
+  --color-snake-body: var(--primitive-zinc-500);
+  --color-snake-food: var(--primitive-zinc-400);
+
+  /* Radius */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-button: 0.625rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-drop-sm: 0 1px 1px rgb(0 0 0 / 0.05);
+
+  /* Z-index */
+  --z-modal: 50;
+
+  /* Motion */
+  --duration-normal: 300ms;
+
+  /* Layout */
+  --layout-max-content: 64rem;
+  --layout-max-form: 28rem;
+  --layout-max-modal: 32rem;
+  --layout-max-game: 36rem;
+}

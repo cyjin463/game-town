@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "@/components/atoms/Button";
-import { Input } from "@/components/atoms/Input";
+import { Button } from "@/shared/atoms/Button";
+import { Input } from "@/shared/atoms/Input";
 
 interface AuthFormProps {
   mode: "login" | "register";
@@ -79,8 +79,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl sm:p-8">
-      <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
+    <div className="card-form">
+      <h2 className="heading-form">
         {mode === "login" ? "로그인" : "회원가입"}
       </h2>
       <form onSubmit={handleSubmit}>
@@ -140,13 +140,9 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600">
+        <p className="text-caption">
           {mode === "login" ? "계정이 없으신가요?" : "이미 계정이 있으신가요?"}
-          <button
-            type="button"
-            onClick={onToggleMode}
-            className="ml-1 cursor-pointer border-none bg-transparent p-0 text-sm text-gray-600 underline hover:text-gray-900"
-          >
+          <button type="button" onClick={onToggleMode} className="link-inline">
             {mode === "login" ? "회원가입" : "로그인"}
           </button>
         </p>

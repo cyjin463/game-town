@@ -25,9 +25,9 @@ export const Input: React.FC<InputProps> = ({
   return (
     <div className={cn("mb-4", className)}>
       {label && (
-        <label className="mb-1 block text-sm font-bold text-gray-800">
+        <label className="mb-1 block text-sm font-bold text-foreground">
           {label}
-          {required && <span className="ml-0.5 text-red-500">*</span>}
+          {required && <span className="ml-0.5 text-danger">*</span>}
         </label>
       )}
       <input
@@ -36,12 +36,12 @@ export const Input: React.FC<InputProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          "w-full rounded-md border border-gray-300 px-3 py-2 text-sm transition-colors focus:border-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500/20",
-          error && "border-red-500"
+          "w-full rounded-md border border-line-strong px-3 py-2 text-sm transition-colors focus:border-line-focus focus:outline-none focus:ring-2 focus:ring-ring-focus",
+          error && "border-line-danger"
         )}
         required={required}
       />
-      {error && <span className="mt-1 block text-xs text-red-500">{error}</span>}
+      {error && <span className="mt-1 block text-xs text-danger">{error}</span>}
     </div>
   );
 };

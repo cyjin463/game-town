@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/atoms/Button";
+import { Button } from "@/shared/atoms/Button";
+import { useSubmitScoreMutation } from "@/hooks/useScores";
 
 interface Position {
   x: number;
@@ -18,11 +19,13 @@ interface Obstacle {
 interface SnakeGameProps {
   autoStart?: boolean;
   onExit?: () => void;
+  username?: string;
 }
 
 export const SnakeGame: React.FC<SnakeGameProps> = ({
   autoStart = false,
   onExit,
+  username,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameRunning, setGameRunning] = useState(false);
@@ -30,6 +33,8 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({
   const [length, setLength] = useState(5);
   const [gameOver, setGameOver] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
+  const submitScoreMutation = useSubmitScoreMutation();
+  const scoreSubmittedRef = useRef(false);
 
   const gameRef = useRef({
     snake: [
@@ -461,6 +466,7 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({
   }, [gameRunning]);
 
   const startGame = () => {
+    scoreSubmittedRef.current = false;
     // 게임 상태 완전 초기화
     setGameRunning(false); // 먼저 게임 중지
     setScore(0);
@@ -536,43 +542,33 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (!gameOver || !username || scoreSubmittedRef.current) return;
+
+    scoreSubmittedRef.current = true;
+    submitScoreMutation.mutate({ username, score: finalScore });
+  }, [gameOver, username, finalScore, submitScoreMutation]);
+
   return (
-    <div className="w-full max-w-lg rounded-2xl bg-white p-4 text-center shadow-xl sm:max-w-xl sm:p-6">
+    <div className="card w-full max-w-lg p-4 text-center sm:max-w-game sm:p-6">
       <div className="mb-4 flex flex-col items-center justify-between gap-3 sm:flex-row">
         {onExit && (
-          <button
-            type="button"
-            onClick={onExit}
-            className="rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-200 px-5 py-2.5 text-sm font-medium text-gray-600 shadow-sm transition-all hover:-translate-y-px hover:from-white hover:to-gray-50 hover:text-gray-800 hover:shadow-md"
-          >
+          <button type="button" onClick={onExit} className="btn-secondary-ghost">
             ← 돌아가기
           </button>
         )}
-        <h1 className="flex-1 text-2xl font-bold text-gray-800 drop-shadow-sm sm:text-3xl">
-          지렁이 게임
-        </h1>
+        <h1 className="heading-page flex-1">지렁이 게임</h1>
       </div>
 
-      <div className="mb-4 flex justify-around gap-4 text-sm font-bold sm:text-base">
-        <div className="rounded-lg bg-gray-50 px-4 py-2 shadow-sm">
-          점수: {score}
-        </div>
-        <div className="rounded-lg bg-gray-50 px-4 py-2 shadow-sm">
-          길이: {length}
-        </div>
+      <div className="mb-4 flex justify-around gap-4">
+        <div className="stat-badge">점수: {score}</div>
+        <div className="stat-badge">길이: {length}</div>
       </div>
 
-      <canvas
-        ref={canvasRef}
-        width={300}
-        height={300}
-        className="mx-auto my-4 block h-[300px] w-[300px] rounded-xl border-4 border-zinc-800 bg-gray-100 shadow-lg"
-      />
+      <canvas ref={canvasRef} width={300} height={300} className="game-frame" />
 
       <div className="my-4">
-        <p className="mb-3 text-sm text-gray-600 sm:text-base">
-          방향키로 지렁이를 조작하세요!
-        </p>
+        <p className="text-body mb-3">방향키로 지렁이를 조작하세요!</p>
         {!autoStart && (
           <Button onClick={startGame} disabled={gameRunning}>
             게임 시작
@@ -581,12 +577,10 @@ export const SnakeGame: React.FC<SnakeGameProps> = ({
       </div>
 
       {gameOver && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-          <div className="flex min-w-[300px] flex-col items-center rounded-2xl bg-white p-8 text-center shadow-2xl">
-            <h2 className="mb-3 text-3xl font-bold text-red-500 drop-shadow-sm">
-              게임 오버!
-            </h2>
-            <p className="mb-6 text-xl font-semibold text-gray-800">
+        <div className="overlay">
+          <div className="overlay-panel">
+            <h2 className="heading-danger mb-3">게임 오버!</h2>
+            <p className="mb-6 text-xl font-semibold text-foreground">
               점수: {finalScore}
             </p>
             <div className="flex flex-row items-center gap-3">

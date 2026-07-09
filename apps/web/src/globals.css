@@ -1,0 +1,97 @@
+@import "./styles/tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply min-h-screen bg-gradient-to-br from-page-from to-page-to;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply w-full max-w-content px-4 py-6 sm:px-6;
+  }
+
+  .card {
+    @apply rounded-2xl bg-surface shadow-elevated;
+  }
+
+  .card-section {
+    @apply card flex flex-col items-center gap-6 p-6 md:flex-row md:items-center md:p-8;
+  }
+
+  .card-panel {
+    @apply card p-6;
+  }
+
+  .card-form {
+    @apply card w-full max-w-form p-6 sm:p-8;
+  }
+
+  .overlay {
+    @apply fixed inset-0 z-modal flex items-center justify-center bg-overlay p-4;
+  }
+
+  .overlay-panel {
+    @apply flex min-w-[300px] flex-col items-center rounded-2xl bg-surface p-8 text-center shadow-overlay;
+  }
+
+  .heading-page {
+    @apply text-2xl font-bold text-foreground drop-shadow-sm sm:text-3xl;
+  }
+
+  .heading-section {
+    @apply text-xl font-bold text-foreground;
+  }
+
+  .heading-form {
+    @apply mb-6 text-center text-2xl font-bold text-foreground;
+  }
+
+  .heading-danger {
+    @apply text-3xl font-bold text-danger drop-shadow-sm;
+  }
+
+  .text-body {
+    @apply text-sm leading-relaxed text-foreground-muted sm:text-base;
+  }
+
+  .text-caption {
+    @apply text-sm text-foreground-subtle;
+  }
+
+  .text-error {
+    @apply text-danger;
+  }
+
+  .stat-badge {
+    @apply rounded-lg bg-surface-muted px-4 py-2 text-sm font-bold shadow-sm sm:text-base;
+  }
+
+  .list-item-row {
+    @apply flex items-center justify-between rounded-lg bg-surface-muted px-4 py-2 text-sm sm:text-base;
+  }
+
+  .game-frame {
+    @apply mx-auto my-4 block h-[300px] w-[300px] rounded-xl border-4 border-line-game bg-canvas shadow-lg;
+  }
+
+  .game-preview-frame {
+    @apply flex h-32 w-32 items-center justify-center rounded-xl border-4 border-line-game bg-canvas sm:h-40 sm:w-40;
+  }
+
+  .icon-button {
+    @apply absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border-none bg-transparent text-2xl text-foreground-subtle transition-colors hover:bg-surface-subtle hover:text-foreground;
+  }
+
+  .link-inline {
+    @apply ml-1 cursor-pointer border-none bg-transparent p-0 text-sm text-foreground-muted underline hover:text-foreground-link;
+  }
+
+  .btn-secondary-ghost {
+    @apply rounded-lg border border-line bg-gradient-to-br from-surface-muted to-surface-soft px-5 py-2.5 text-sm font-medium text-foreground-muted shadow-sm transition-all hover:-translate-y-px hover:from-surface hover:to-surface-muted hover:text-foreground hover:shadow-md;
+  }
+}

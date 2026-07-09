@@ -1,7 +1,8 @@
 import React from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import "@/styles/globals.css";
+import { QueryProvider } from "@/providers/QueryProvider";
+import "@/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,9 +26,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={inter.className}>
-        <div className="flex min-h-screen w-full items-center justify-center">
-          {children}
-        </div>
+        <QueryProvider>
+          <div className="flex min-h-screen w-full items-center justify-center">
+            {children}
+          </div>
+        </QueryProvider>
       </body>
     </html>
   );
