@@ -1,0 +1,16 @@
+{
+  "name": "pixel-worm",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev --filter=web",
+    "dev:api": "turbo dev --filter=api",
+    "build": "turbo build --filter=web",
+    "build:api": "turbo build --filter=api",
+    "start": "turbo start --filter=web",
+    "lint": "turbo lint --filter=web"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4"
+  },
+  "packageManager": "pnpm@11.5.0"
+}

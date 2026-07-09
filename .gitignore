@@ -1,0 +1,14 @@
+node_modules
+.next
+.turbo
+dist
+.pnpm-store
+*.log
+.env*.local
+
+# legacy
+frontend/
+
+# gradle
+apps/api/build
+apps/api/.gradle
