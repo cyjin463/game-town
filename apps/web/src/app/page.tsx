@@ -1,13 +1,5 @@
 import { HomeTemplate } from "@/components/Home/templates";
-import { Header } from "@/shared/Header";
-import { Footer } from "@/shared/Footer";
 
 export default function HomePage() {
-  return (
-    <>
-      <Header/>
-      <HomeTemplate />
-      <Footer />
-    </>
-  );
+  return <HomeTemplate />;
 }

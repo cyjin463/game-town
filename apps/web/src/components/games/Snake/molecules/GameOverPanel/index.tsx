@@ -27,7 +27,7 @@ export function GameOverPanel({
             href="/"
             className="btn btn-secondary btn-md w-[120px] text-center"
           >
-            돌아가기
+            다른 게임
           </Link>
         </div>
       </div>
