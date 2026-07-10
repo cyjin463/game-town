@@ -39,8 +39,4 @@ class UserService(
 
         return user
     }
-
-    fun findByUsername(username: String): User? {
-        return userRepository.findByUsername(username).orElse(null)
-    }
 } 

@@ -11,8 +11,6 @@
   --primitive-neutral-700: #374151;
   --primitive-neutral-800: #1f2937;
   --primitive-neutral-900: #111827;
-  --primitive-neutral-100-page: #f5f5f5;
-  --primitive-neutral-300-page: #d4d4d4;
 
   --primitive-zinc-400: #a1a1aa;
   --primitive-zinc-500: #71717a;
@@ -24,9 +22,6 @@
   --primitive-red-500: #ef4444;
 
   /* Semantic colors */
-  --color-page-from: var(--primitive-neutral-100-page);
-  --color-page-to: var(--primitive-neutral-300-page);
-
   --color-surface: var(--primitive-white);
   --color-surface-muted: var(--primitive-neutral-50);
   --color-surface-subtle: var(--primitive-neutral-100);
@@ -82,7 +77,6 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-  --shadow-drop-sm: 0 1px 1px rgb(0 0 0 / 0.05);
 
   /* Z-index */
   --z-modal: 50;
@@ -91,7 +85,6 @@
   --duration-normal: 300ms;
 
   /* Layout */
-  --layout-max-content: 64rem;
   --layout-max-form: 28rem;
   --layout-max-modal: 32rem;
   --layout-max-game: 36rem;

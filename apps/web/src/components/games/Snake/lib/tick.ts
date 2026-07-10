@@ -8,7 +8,7 @@ import { addFoodScore, applySpeedForScore } from "./score";
 
 export type TickResult = "continue" | "game_over";
 
-export interface TickStateUpdate {
+interface TickStateUpdate {
   score: number;
   length: number;
 }

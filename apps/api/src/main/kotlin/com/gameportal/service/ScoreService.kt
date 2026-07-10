@@ -1,7 +1,6 @@
 package com.gameportal.service
 
 import com.gameportal.dto.ScoreResponse
-import com.gameportal.dto.SubmitScoreRequest
 import com.gameportal.entity.Score
 import com.gameportal.repository.ScoreRepository
 import com.gameportal.repository.UserRepository
@@ -15,20 +14,21 @@ class ScoreService(
 ) {
 
     @Transactional
-    fun submitScore(request: SubmitScoreRequest): ScoreResponse {
-        val user = userRepository.findByUsername(request.username)
+    fun submitScore(username: String, score: Int): ScoreResponse {
+        val user = userRepository.findByUsername(username)
             .orElseThrow { IllegalArgumentException("존재하지 않는 사용자입니다") }
 
         val userId = user.id ?: throw IllegalStateException("사용자 ID가 없습니다")
 
         val existing = scoreRepository.findById(userId)
         if (existing.isPresent) {
-            val score = existing.get()
-            if (request.score > score.score) {
-                score.score = request.score
+            val existingScore = existing.get()
+            if (score <= existingScore.score) {
+                return toResponse(existingScore, user.username)
             }
+            existingScore.score = score
         } else {
-            scoreRepository.save(Score(userId = userId, score = request.score))
+            scoreRepository.save(Score(userId = userId, score = score))
         }
 
         recalculateRanks()

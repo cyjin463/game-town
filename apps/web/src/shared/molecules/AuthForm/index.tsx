@@ -145,7 +145,7 @@ export const AuthForm = ({
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-caption">
+        <p className="text-sm text-foreground-muted">
           {mode === "login" ? "계정이 없으신가요?" : "이미 계정이 있으신가요?"}
           <button
             type="button"

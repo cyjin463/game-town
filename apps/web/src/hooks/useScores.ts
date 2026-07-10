@@ -14,8 +14,10 @@ export function useSubmitScoreMutation() {
 
   return useMutation({
     mutationFn: submitScore,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.scores.leaderboard });
+    onSuccess: (data, variables) => {
+      if (data.score <= variables.score) {
+        queryClient.invalidateQueries({ queryKey: queryKeys.scores.leaderboard });
+      }
     },
   });
 }

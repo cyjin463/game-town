@@ -3,7 +3,6 @@ import type { Position } from "./types";
 export const GRID_SIZE = 10;
 export const GRID_WIDTH = 30;
 export const GRID_HEIGHT = 30;
-export const INITIAL_SNAKE_LENGTH = 5;
 export const SCORE_PER_FOOD = 10;
 export const OBSTACLE_SCORE_INTERVAL = 30;
 export const MAX_OBSTACLE_PLACEMENT_ATTEMPTS = 50;

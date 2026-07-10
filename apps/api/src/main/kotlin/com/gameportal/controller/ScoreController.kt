@@ -5,6 +5,7 @@ import com.gameportal.dto.SubmitScoreRequest
 import com.gameportal.service.ScoreService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -18,9 +19,12 @@ class ScoreController(
 ) {
 
     @PostMapping
-    fun submitScore(@Valid @RequestBody request: SubmitScoreRequest): ResponseEntity<ScoreResponse> {
+    fun submitScore(
+        @Valid @RequestBody request: SubmitScoreRequest,
+        @AuthenticationPrincipal username: String,
+    ): ResponseEntity<ScoreResponse> {
         return try {
-            ResponseEntity.ok(scoreService.submitScore(request))
+            ResponseEntity.ok(scoreService.submitScore(username, request.score))
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().build()
         }

@@ -7,7 +7,12 @@ import com.gameportal.service.JwtService
 import com.gameportal.service.UserService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/auth")
@@ -38,6 +43,11 @@ class AuthController(
                 )
             )
         }
+    }
+
+    @GetMapping("/me")
+    fun me(@AuthenticationPrincipal username: String): ResponseEntity<Map<String, String>> {
+        return ResponseEntity.ok(mapOf("username" to username))
     }
 
     @PostMapping("/login")

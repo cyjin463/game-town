@@ -12,7 +12,7 @@ export function runGameLoopFrame(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
   callbacks: GameLoopCallbacks
-): TickResult | "idle" {
+): TickResult {
   game.moveCounter++;
 
   if (game.moveCounter >= game.moveInterval) {

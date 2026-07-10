@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { AuthProvider } from "@/providers/AuthProvider";
 import { QueryProvider } from "@/providers/QueryProvider";
 import "@/globals.css";
 import { Header } from "@/shared/Header";
@@ -33,11 +34,13 @@ export default function RootLayout({
     <html lang="ko">
       <body className={inter.className}>
         <QueryProvider>
-          <Header />
-          <div className="max-w-[1280px] mx-auto pt-20">
-            {children}
-          </div>
-          <Footer />
+          <AuthProvider>
+            <Header />
+            <div className="max-w-[1280px] mx-auto pt-20">
+              {children}
+            </div>
+            <Footer />
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { AuthForm } from "@/shared/molecules/AuthForm";
 import { useLoginMutation, useRegisterMutation } from "@/hooks/useAuthMutations";
-import type { AuthSession } from "@/hooks/useAuth";
+import type { AuthSession } from "@/providers/AuthProvider";
 
 interface AuthModalProps {
   isOpen: boolean;

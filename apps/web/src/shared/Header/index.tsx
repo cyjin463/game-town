@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/providers/AuthProvider";
 import { Button } from "@/shared/atoms/Button";
 import { AuthModal } from "@/shared/organisms/Modal/AuthModal";
 import Link from "next/link";

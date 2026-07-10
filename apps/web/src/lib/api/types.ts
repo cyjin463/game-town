@@ -4,6 +4,10 @@ export interface AuthResponse {
   message: string;
 }
 
+export interface AuthMeResponse {
+  username: string;
+}
+
 export interface LoginRequest {
   username: string;
   password: string;
@@ -23,7 +27,6 @@ export interface ScoreResponse {
 }
 
 export interface SubmitScoreRequest {
-  username: string;
   score: number;
 }
 

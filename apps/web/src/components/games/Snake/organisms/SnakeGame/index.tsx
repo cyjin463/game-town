@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { SnakeCanvas } from "@/components/games/Snake/atoms";
-import { useSubmitScoreMutation } from "@/hooks/useScores";
+import { SnakeCanvas } from "@/components/games/Snake/atoms/SnakeCanvas";
+import { useSubmitScoreMutation, useLeaderboardQuery } from "@/hooks/useScores";
 import { useSnakeGame } from "@/components/games/Snake/hooks/useSnakeGame";
 import {
   GameOverPanel,
   GameStats,
   GameStatusMessage,
 } from "@/components/games/Snake/molecules";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/providers/AuthProvider";
 
 export const SnakeGame = () => {
   const {
@@ -23,15 +23,43 @@ export const SnakeGame = () => {
   } = useSnakeGame();
 
   const submitScoreMutation = useSubmitScoreMutation();
+  const { data: leaderboard, isLoading: isLeaderboardLoading } =
+    useLeaderboardQuery();
   const scoreSubmittedRef = useRef(false);
-  const { username } = useAuth();
+  const { username, isLoggedIn, isReady } = useAuth();
 
   useEffect(() => {
-    if (!gameOver || scoreSubmittedRef.current) return;
+    if (
+      !isReady ||
+      !gameOver ||
+      scoreSubmittedRef.current ||
+      !isLoggedIn ||
+      isLeaderboardLoading
+    ) {
+      return;
+    }
+
+    const currentBest = leaderboard?.find(
+      (entry) => entry.username === username
+    )?.score;
+
+    if (currentBest !== undefined && finalScore <= currentBest) {
+      scoreSubmittedRef.current = true;
+      return;
+    }
 
     scoreSubmittedRef.current = true;
-    submitScoreMutation.mutate({ username, score: finalScore });
-  }, [gameOver, username, finalScore, submitScoreMutation]);
+    submitScoreMutation.mutate({ score: finalScore });
+  }, [
+    isReady,
+    gameOver,
+    isLoggedIn,
+    isLeaderboardLoading,
+    username,
+    finalScore,
+    leaderboard,
+    submitScoreMutation,
+  ]);
 
   useEffect(() => {
     if (!gameOver) {
@@ -49,10 +77,9 @@ export const SnakeGame = () => {
         <GameOverPanel
           finalScore={finalScore}
           onRestart={restartGame}
+          loginRequired={!isLoggedIn}
         />
       )}
     </div>
   );
-}
-
-export default SnakeGame;
+};
