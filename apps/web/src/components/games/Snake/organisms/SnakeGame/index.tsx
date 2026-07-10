@@ -3,12 +3,12 @@
 import { useEffect, useRef } from "react";
 import { GameCanvas } from "@/shared/atoms/GameCanvas";
 import { useSubmitScoreMutation } from "@/hooks/useScores";
-import { useSnakeGame } from "../../hooks/useSnakeGame";
+import { useSnakeGame } from "@/components/games/Snake/hooks/useSnakeGame";
 import {
   GameOverPanel,
   GameStats,
   GameStatusMessage,
-} from "../../molecules";
+} from "@/components/games/Snake/molecules";
 import { useAuth } from "@/hooks/useAuth";
 
 export function SnakeGame() {

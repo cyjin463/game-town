@@ -3,10 +3,10 @@ import {
   GRID_SIZE,
   GRID_WIDTH,
   INITIAL_SNAKE,
-} from "./constants";
-import { createFoodPosition } from "./food";
-import { INITIAL_MOVE_INTERVAL } from "./speed";
-import type { Obstacle, Position } from "./types";
+} from "@/components/games/Snake/lib/constants";
+import { createFoodPosition } from "@/components/games/Snake/lib/food";
+import { INITIAL_MOVE_INTERVAL } from "@/components/games/Snake/lib/speed";
+import type { Obstacle, Position } from "@/components/games/Snake/lib/types";
 
 export interface GameState {
   snake: Position[];

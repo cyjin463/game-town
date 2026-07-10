@@ -1,13 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { renderIdleBoard, runGameLoopFrame } from "../lib/game-loop";
+import { renderIdleBoard, runGameLoopFrame } from "@/components/games/Snake/lib/game-loop";
 import {
   createInitialGameState,
   resetGameState,
   type GameState,
-} from "../lib/game-state";
-import { applyKeyboardDirection } from "../lib/movement";
+} from "@/components/games/Snake/lib/game-state";
+import { applyKeyboardDirection } from "@/components/games/Snake/lib/movement";
 
 export function useSnakeGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);

@@ -54,4 +54,30 @@
   .btn-lg {
     @apply rounded-xl px-8 py-4 text-lg;
   }
+
+  .heading-hero-gradient {
+    @apply bg-clip-text font-bold text-transparent;
+    background-image: linear-gradient(
+      120deg,
+      var(--color-foreground) 0%,
+      var(--color-foreground-muted) 22%,
+      var(--color-foreground-disabled) 45%,
+      var(--color-foreground-subtle) 50%,
+      var(--color-foreground-disabled) 55%,
+      var(--color-foreground-muted) 78%,
+      var(--color-foreground) 100%
+    );
+    background-size: 200% 200%;
+    animation: heading-gradient-slide 4s linear infinite;
+  }
+}
+
+@keyframes heading-gradient-slide {
+  0% {
+    background-position: 200% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }

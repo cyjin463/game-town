@@ -1,6 +1,4 @@
-import React from "react";
-
-export const SnakePreview: React.FC = () => {
+export function SnakePreview() {
   return (
     <div className="grid h-32 w-32 grid-cols-10 grid-rows-10 gap-px sm:h-40 sm:w-40">
       <div className="col-start-5 row-start-5 rounded-sm bg-snake-head" />
