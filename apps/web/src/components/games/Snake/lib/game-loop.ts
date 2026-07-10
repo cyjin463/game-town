@@ -1,6 +1,6 @@
-import type { GameState } from "./game-state";
-import { renderGame } from "./renderer";
-import { processGameTick, type TickResult } from "./tick";
+import type { GameState } from "@/components/games/Snake/lib/game-state";
+import { renderGame } from "@/components/games/Snake/lib/renderer";
+import { processGameTick, type TickResult } from "@/components/games/Snake/lib/tick";
 
 export interface GameLoopCallbacks {
   onGameOver: () => void;
@@ -12,7 +12,7 @@ export function runGameLoopFrame(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
   callbacks: GameLoopCallbacks
-): TickResult | "idle" {
+): TickResult {
   game.moveCounter++;
 
   if (game.moveCounter >= game.moveInterval) {

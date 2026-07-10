@@ -1,15 +1,5 @@
-"use client";
-
-import { SnakeGameTemplate } from "@/components/games/Snake";
-import { Header } from "@/shared/Header";
-import { Footer } from "@/shared/Footer";
+import { SnakeGameTemplate } from "@/components/games/Snake/templates";
 
 export default function SnakeGamePage() {
-  return (
-    <>
-      <Header/>
-      <SnakeGameTemplate />
-      <Footer />
-    </>
-  );
+  return <SnakeGameTemplate />;
 }

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { AuthForm } from "@/shared/molecules/AuthForm";
 import { useLoginMutation, useRegisterMutation } from "@/hooks/useAuthMutations";
-import type { AuthSession } from "@/hooks/useAuth";
+import type { AuthSession } from "@/providers/AuthProvider";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -72,10 +72,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         passwordHint: data.passwordHint ?? "",
       },
       {
-        onSuccess: () => {
-          alert("회원가입이 완료되었습니다!");
-          resetRegister();
-          setMode("login");
+        onSuccess: (result) => {
+          onLogin({ username: result.username, token: result.token });
+          onClose();
         },
       }
     );

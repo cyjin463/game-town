@@ -6,7 +6,7 @@ const panelClassName =
   "h-fit w-full max-w-game rounded-2xl border border-line bg-surface p-6 shadow-elevated xl:absolute xl:top-6 xl:right-40 xl:h-[calc(100%-3rem)] xl:min-w-[182px] xl:w-auto xl:max-w-none";
 const titleClassName = "mb-4 text-xl font-bold text-foreground";
 
-export function Leaderboard() {
+export const Leaderboard = () => {
   const { data, isLoading, isError } = useLeaderboardQuery();
 
   if (isLoading) {
@@ -22,7 +22,7 @@ export function Leaderboard() {
     return (
       <section className={panelClassName}>
         <h2 className={titleClassName}>이번주 TOP10</h2>
-        <p className="text-error text-sm">랭킹을 불러오지 못했습니다.</p>
+        <p className="text-error text-sm">불러오지 못했습니다.</p>
       </section>
     );
   }

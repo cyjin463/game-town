@@ -1,7 +1,6 @@
 package com.gameportal.service
 
 import com.gameportal.dto.ScoreResponse
-import com.gameportal.dto.SubmitScoreRequest
 import com.gameportal.entity.Score
 import com.gameportal.repository.ScoreRepository
 import com.gameportal.repository.UserRepository
@@ -14,36 +13,43 @@ class ScoreService(
     private val userRepository: UserRepository,
 ) {
 
+    fun getLeaderboard(): List<ScoreResponse> {
+        return scoreRepository.findTop10ByOrderByScoreDesc().map { score ->
+            toResponse(score, resolveUsername(score.userId))
+        }
+    }
+
+    fun getMyScore(username: String): ScoreResponse? {
+        val user = userRepository.findByUsername(username).orElse(null) ?: return null
+        val userId = user.id ?: return null
+
+        return scoreRepository.findById(userId)
+            .map { toResponse(it, user.username) }
+            .orElse(null)
+    }
+
     @Transactional
-    fun submitScore(request: SubmitScoreRequest): ScoreResponse {
-        val user = userRepository.findByUsername(request.username)
+    fun submitScore(username: String, score: Int): ScoreResponse {
+        val user = userRepository.findByUsername(username)
             .orElseThrow { IllegalArgumentException("존재하지 않는 사용자입니다") }
 
         val userId = user.id ?: throw IllegalStateException("사용자 ID가 없습니다")
 
         val existing = scoreRepository.findById(userId)
         if (existing.isPresent) {
-            val score = existing.get()
-            if (request.score > score.score) {
-                score.score = request.score
+            val existingScore = existing.get()
+            if (score <= existingScore.score) {
+                return toResponse(existingScore, user.username)
             }
+            existingScore.score = score
         } else {
-            scoreRepository.save(Score(userId = userId, score = request.score))
+            scoreRepository.save(Score(userId = userId, score = score))
         }
 
         recalculateRanks()
 
         val saved = scoreRepository.findById(userId).orElseThrow()
         return toResponse(saved, user.username)
-    }
-
-    fun getLeaderboard(): List<ScoreResponse> {
-        return scoreRepository.findAllByOrderByScoreDesc().map { score ->
-            val username = userRepository.findById(score.userId)
-                .map { it.username }
-                .orElse("unknown")
-            toResponse(score, username)
-        }
     }
 
     @Transactional
@@ -55,6 +61,12 @@ class ScoreService(
         scoreRepository.findAllByOrderByScoreDesc().forEachIndexed { index, score ->
             score.rank = index + 1
         }
+    }
+
+    private fun resolveUsername(userId: Long): String {
+        return userRepository.findById(userId)
+            .map { it.username }
+            .orElse("unknown")
     }
 
     private fun toResponse(score: Score, username: String): ScoreResponse {

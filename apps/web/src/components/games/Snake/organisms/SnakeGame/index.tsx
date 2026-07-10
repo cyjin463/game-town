@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { GameCanvas } from "@/shared/atoms/GameCanvas";
-import { useSubmitScoreMutation } from "@/hooks/useScores";
+import { SnakeCanvas } from "@/components/games/Snake/atoms/SnakeCanvas";
+import { useSubmitScoreMutation, useMyScoreQuery } from "@/hooks/useScores";
 import { useSnakeGame } from "@/components/games/Snake/hooks/useSnakeGame";
 import {
   GameOverPanel,
   GameStats,
   GameStatusMessage,
 } from "@/components/games/Snake/molecules";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/providers/AuthProvider";
 
-export function SnakeGame() {
+export const SnakeGame = () => {
   const {
     canvasRef,
     score,
@@ -24,14 +24,40 @@ export function SnakeGame() {
 
   const submitScoreMutation = useSubmitScoreMutation();
   const scoreSubmittedRef = useRef(false);
-  const { username } = useAuth();
+  const { isLoggedIn, isReady } = useAuth();
+  const { data: myScore, isLoading: isMyScoreLoading } = useMyScoreQuery(
+    isReady && isLoggedIn
+  );
 
   useEffect(() => {
-    if (!gameOver || scoreSubmittedRef.current) return;
+    if (
+      !isReady ||
+      !gameOver ||
+      scoreSubmittedRef.current ||
+      !isLoggedIn ||
+      isMyScoreLoading
+    ) {
+      return;
+    }
+
+    const currentBest = myScore?.score;
+
+    if (currentBest != null && finalScore <= currentBest) {
+      scoreSubmittedRef.current = true;
+      return;
+    }
 
     scoreSubmittedRef.current = true;
-    submitScoreMutation.mutate({ username, score: finalScore });
-  }, [gameOver, username, finalScore, submitScoreMutation]);
+    submitScoreMutation.mutate({ score: finalScore });
+  }, [
+    isReady,
+    gameOver,
+    isLoggedIn,
+    isMyScoreLoading,
+    myScore,
+    finalScore,
+    submitScoreMutation,
+  ]);
 
   useEffect(() => {
     if (!gameOver) {
@@ -43,14 +69,15 @@ export function SnakeGame() {
     <div className="card relative w-full max-w-game p-4 text-center sm:p-6 xl:mx-auto xl:w-[70%]">
       <h1 className="heading-page mb-4">지렁이 게임</h1>
       <GameStats score={score} length={length} />
-      <GameCanvas ref={canvasRef} />
+      <SnakeCanvas ref={canvasRef} />
       <GameStatusMessage message={statusMessage} />
       {gameOver && (
         <GameOverPanel
           finalScore={finalScore}
           onRestart={restartGame}
+          loginRequired={!isLoggedIn}
         />
       )}
     </div>
   );
-}
+};

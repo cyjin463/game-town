@@ -22,7 +22,7 @@ const sizeClasses = {
   large: "btn-lg",
 };
 
-export const Button: React.FC<ButtonProps> = ({
+export function Button ({
   children,
   onClick,
   variant = "primary",
@@ -30,7 +30,7 @@ export const Button: React.FC<ButtonProps> = ({
   disabled = false,
   className = "",
   type = "button",
-}) => {
+}: ButtonProps) {
   return (
     <button
       type={type}
@@ -41,4 +41,4 @@ export const Button: React.FC<ButtonProps> = ({
       {children}
     </button>
   );
-};
+}

@@ -19,13 +19,13 @@ interface AuthData {
   passwordHint?: string;
 }
 
-export const AuthForm: React.FC<AuthFormProps> = ({
+export const AuthForm = ({
   mode,
   onSubmit,
   onToggleMode,
   isPending = false,
   submitError,
-}) => {
+}: AuthFormProps) => {
   const [formData, setFormData] = useState<AuthData>({
     username: "",
     password: "",
@@ -145,7 +145,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-caption">
+        <p className="text-sm text-foreground-muted">
           {mode === "login" ? "계정이 없으신가요?" : "이미 계정이 있으신가요?"}
           <button
             type="button"

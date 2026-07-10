@@ -4,6 +4,10 @@ export interface AuthResponse {
   message: string;
 }
 
+export interface AuthMeResponse {
+  username: string;
+}
+
 export interface LoginRequest {
   username: string;
   password: string;
@@ -22,8 +26,14 @@ export interface ScoreResponse {
   rank: number;
 }
 
-export interface SubmitScoreRequest {
+export interface MyScoreResponse {
   username: string;
+  userId: number | null;
+  score: number | null;
+  rank: number | null;
+}
+
+export interface SubmitScoreRequest {
   score: number;
 }
 

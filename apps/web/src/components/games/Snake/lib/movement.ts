@@ -1,6 +1,6 @@
-import { getDirectionFromKey } from "./direction";
-import type { GameState } from "./game-state";
-import type { Position } from "./types";
+import { getDirectionFromKey } from "@/components/games/Snake/lib/direction";
+import type { GameState } from "@/components/games/Snake/lib/game-state";
+import type { Position } from "@/components/games/Snake/lib/types";
 
 const OPPOSITE_DIRECTIONS: Record<string, string> = {
   up: "down",

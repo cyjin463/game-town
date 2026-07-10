@@ -3,17 +3,12 @@ module.exports = {
   content: [
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/games/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/shared/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/styles/**/*.css",
   ],
   theme: {
     extend: {
       colors: {
-        page: {
-          from: "var(--color-page-from)",
-          to: "var(--color-page-to)",
-        },
         surface: {
           DEFAULT: "var(--color-surface)",
           muted: "var(--color-surface-muted)",
@@ -79,7 +74,6 @@ module.exports = {
         lg: "var(--shadow-lg)",
         elevated: "var(--shadow-xl)",
         overlay: "var(--shadow-2xl)",
-        "drop-sm": "var(--shadow-drop-sm)",
       },
       zIndex: {
         modal: "var(--z-modal)",
@@ -88,7 +82,6 @@ module.exports = {
         normal: "var(--duration-normal)",
       },
       maxWidth: {
-        content: "var(--layout-max-content)",
         form: "var(--layout-max-form)",
         modal: "var(--layout-max-modal)",
         game: "var(--layout-max-game)",

@@ -1,6 +1,6 @@
 import { GameList } from "@/shared/organisms/GameList";
 
-export const HomeTemplate = () => {
+export function HomeTemplate() {
   return (
     <div className="w-full mx-auto px-4 py-6 sm:px-6">
       <main className="flex flex-col items-center justify-center">
@@ -11,6 +11,4 @@ export const HomeTemplate = () => {
       </main>
     </div>
   );
-};
-
-export default HomeTemplate;
+}

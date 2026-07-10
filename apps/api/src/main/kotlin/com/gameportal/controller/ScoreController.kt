@@ -1,10 +1,12 @@
 package com.gameportal.controller
 
+import com.gameportal.dto.MyScoreResponse
 import com.gameportal.dto.ScoreResponse
 import com.gameportal.dto.SubmitScoreRequest
 import com.gameportal.service.ScoreService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -18,9 +20,12 @@ class ScoreController(
 ) {
 
     @PostMapping
-    fun submitScore(@Valid @RequestBody request: SubmitScoreRequest): ResponseEntity<ScoreResponse> {
+    fun submitScore(
+        @Valid @RequestBody request: SubmitScoreRequest,
+        @AuthenticationPrincipal username: String,
+    ): ResponseEntity<ScoreResponse> {
         return try {
-            ResponseEntity.ok(scoreService.submitScore(request))
+            ResponseEntity.ok(scoreService.submitScore(username, request.score))
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().build()
         }
@@ -29,5 +34,21 @@ class ScoreController(
     @GetMapping("/leaderboard")
     fun getLeaderboard(): ResponseEntity<List<ScoreResponse>> {
         return ResponseEntity.ok(scoreService.getLeaderboard())
+    }
+
+    @GetMapping("/me")
+    fun getMyScore(
+        @AuthenticationPrincipal username: String,
+    ): ResponseEntity<MyScoreResponse> {
+        val score = scoreService.getMyScore(username)
+
+        return ResponseEntity.ok(
+            MyScoreResponse(
+                username = username,
+                userId = score?.userId,
+                score = score?.score,
+                rank = score?.rank,
+            )
+        )
     }
 }
