@@ -72,10 +72,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         passwordHint: data.passwordHint ?? "",
       },
       {
-        onSuccess: () => {
-          alert("회원가입이 완료되었습니다!");
-          resetRegister();
-          setMode("login");
+        onSuccess: (result) => {
+          onLogin({ username: result.username, token: result.token });
+          onClose();
         },
       }
     );

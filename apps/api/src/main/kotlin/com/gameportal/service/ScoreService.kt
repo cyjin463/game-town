@@ -13,6 +13,21 @@ class ScoreService(
     private val userRepository: UserRepository,
 ) {
 
+    fun getLeaderboard(): List<ScoreResponse> {
+        return scoreRepository.findTop10ByOrderByScoreDesc().map { score ->
+            toResponse(score, resolveUsername(score.userId))
+        }
+    }
+
+    fun getMyScore(username: String): ScoreResponse? {
+        val user = userRepository.findByUsername(username).orElse(null) ?: return null
+        val userId = user.id ?: return null
+
+        return scoreRepository.findById(userId)
+            .map { toResponse(it, user.username) }
+            .orElse(null)
+    }
+
     @Transactional
     fun submitScore(username: String, score: Int): ScoreResponse {
         val user = userRepository.findByUsername(username)
@@ -37,15 +52,6 @@ class ScoreService(
         return toResponse(saved, user.username)
     }
 
-    fun getLeaderboard(): List<ScoreResponse> {
-        return scoreRepository.findAllByOrderByScoreDesc().map { score ->
-            val username = userRepository.findById(score.userId)
-                .map { it.username }
-                .orElse("unknown")
-            toResponse(score, username)
-        }
-    }
-
     @Transactional
     fun resetAllScores() {
         scoreRepository.deleteAllInBatch()
@@ -55,6 +61,12 @@ class ScoreService(
         scoreRepository.findAllByOrderByScoreDesc().forEachIndexed { index, score ->
             score.rank = index + 1
         }
+    }
+
+    private fun resolveUsername(userId: Long): String {
+        return userRepository.findById(userId)
+            .map { it.username }
+            .orElse("unknown")
     }
 
     private fun toResponse(score: Score, username: String): ScoreResponse {

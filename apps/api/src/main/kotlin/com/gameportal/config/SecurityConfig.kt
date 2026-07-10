@@ -45,6 +45,7 @@ class SecurityConfig(
                     .requestMatchers("/api/auth/login", "/api/auth/register").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
                     .requestMatchers(HttpMethod.GET, "/api/scores/leaderboard").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/scores/me").authenticated()
                     .requestMatchers(HttpMethod.POST, "/api/scores").authenticated()
                     .anyRequest().authenticated()
             }

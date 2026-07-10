@@ -1,5 +1,6 @@
 package com.gameportal.controller
 
+import com.gameportal.dto.MyScoreResponse
 import com.gameportal.dto.ScoreResponse
 import com.gameportal.dto.SubmitScoreRequest
 import com.gameportal.service.ScoreService
@@ -33,5 +34,21 @@ class ScoreController(
     @GetMapping("/leaderboard")
     fun getLeaderboard(): ResponseEntity<List<ScoreResponse>> {
         return ResponseEntity.ok(scoreService.getLeaderboard())
+    }
+
+    @GetMapping("/me")
+    fun getMyScore(
+        @AuthenticationPrincipal username: String,
+    ): ResponseEntity<MyScoreResponse> {
+        val score = scoreService.getMyScore(username)
+
+        return ResponseEntity.ok(
+            MyScoreResponse(
+                username = username,
+                userId = score?.userId,
+                score = score?.score,
+                rank = score?.rank,
+            )
+        )
     }
 }

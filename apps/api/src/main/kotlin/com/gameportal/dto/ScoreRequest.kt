@@ -15,3 +15,10 @@ data class ScoreResponse(
     val score: Int,
     val rank: Int,
 )
+
+data class MyScoreResponse(
+    val username: String,
+    val userId: Long? = null,
+    val score: Int? = null,
+    val rank: Int? = null,
+)

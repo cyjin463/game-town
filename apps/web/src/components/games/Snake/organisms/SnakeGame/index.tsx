@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { SnakeCanvas } from "@/components/games/Snake/atoms/SnakeCanvas";
-import { useSubmitScoreMutation, useLeaderboardQuery } from "@/hooks/useScores";
+import { useSubmitScoreMutation, useMyScoreQuery } from "@/hooks/useScores";
 import { useSnakeGame } from "@/components/games/Snake/hooks/useSnakeGame";
 import {
   GameOverPanel,
@@ -23,10 +23,11 @@ export const SnakeGame = () => {
   } = useSnakeGame();
 
   const submitScoreMutation = useSubmitScoreMutation();
-  const { data: leaderboard, isLoading: isLeaderboardLoading } =
-    useLeaderboardQuery();
   const scoreSubmittedRef = useRef(false);
-  const { username, isLoggedIn, isReady } = useAuth();
+  const { isLoggedIn, isReady } = useAuth();
+  const { data: myScore, isLoading: isMyScoreLoading } = useMyScoreQuery(
+    isReady && isLoggedIn
+  );
 
   useEffect(() => {
     if (
@@ -34,16 +35,14 @@ export const SnakeGame = () => {
       !gameOver ||
       scoreSubmittedRef.current ||
       !isLoggedIn ||
-      isLeaderboardLoading
+      isMyScoreLoading
     ) {
       return;
     }
 
-    const currentBest = leaderboard?.find(
-      (entry) => entry.username === username
-    )?.score;
+    const currentBest = myScore?.score;
 
-    if (currentBest !== undefined && finalScore <= currentBest) {
+    if (currentBest != null && finalScore <= currentBest) {
       scoreSubmittedRef.current = true;
       return;
     }
@@ -54,10 +53,9 @@ export const SnakeGame = () => {
     isReady,
     gameOver,
     isLoggedIn,
-    isLeaderboardLoading,
-    username,
+    isMyScoreLoading,
+    myScore,
     finalScore,
-    leaderboard,
     submitScoreMutation,
   ]);
 

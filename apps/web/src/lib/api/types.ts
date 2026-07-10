@@ -26,6 +26,13 @@ export interface ScoreResponse {
   rank: number;
 }
 
+export interface MyScoreResponse {
+  username: string;
+  userId: number | null;
+  score: number | null;
+  rank: number | null;
+}
+
 export interface SubmitScoreRequest {
   score: number;
 }
