@@ -19,13 +19,13 @@ interface AuthData {
   passwordHint?: string;
 }
 
-export const AuthForm: React.FC<AuthFormProps> = ({
+export const AuthForm = ({
   mode,
   onSubmit,
   onToggleMode,
   isPending = false,
   submitError,
-}) => {
+}: AuthFormProps) => {
   const [formData, setFormData] = useState<AuthData>({
     username: "",
     password: "",

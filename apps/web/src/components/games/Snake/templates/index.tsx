@@ -1,5 +1,5 @@
 import { Leaderboard } from "@/components/Home/molecules";
-import { SnakeGame } from "@/components/games/Snake/organisms/SnakeGame";
+import { SnakeGame } from "@/components/games/Snake/organisms";
 
 export function SnakeGameTemplate() {
   return (

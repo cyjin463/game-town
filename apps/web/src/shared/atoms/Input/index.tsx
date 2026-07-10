@@ -12,7 +12,7 @@ interface InputProps {
   className?: string;
 }
 
-export const Input: React.FC<InputProps> = ({
+export function Input ({
   type = "text",
   placeholder,
   value,
@@ -21,7 +21,7 @@ export const Input: React.FC<InputProps> = ({
   label,
   required = false,
   className = "",
-}) => {
+}: InputProps) {
   return (
     <div className={cn("mb-4", className)}>
       {label && (
@@ -44,4 +44,4 @@ export const Input: React.FC<InputProps> = ({
       {error && <span className="mt-1 block text-xs text-danger">{error}</span>}
     </div>
   );
-};
+}

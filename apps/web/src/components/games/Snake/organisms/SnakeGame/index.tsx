@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { GameCanvas } from "@/shared/atoms/GameCanvas";
+import { SnakeCanvas } from "@/components/games/Snake/atoms";
 import { useSubmitScoreMutation } from "@/hooks/useScores";
 import { useSnakeGame } from "@/components/games/Snake/hooks/useSnakeGame";
 import {
@@ -11,7 +11,7 @@ import {
 } from "@/components/games/Snake/molecules";
 import { useAuth } from "@/hooks/useAuth";
 
-export function SnakeGame() {
+export const SnakeGame = () => {
   const {
     canvasRef,
     score,
@@ -43,7 +43,7 @@ export function SnakeGame() {
     <div className="card relative w-full max-w-game p-4 text-center sm:p-6 xl:mx-auto xl:w-[70%]">
       <h1 className="heading-page mb-4">지렁이 게임</h1>
       <GameStats score={score} length={length} />
-      <GameCanvas ref={canvasRef} />
+      <SnakeCanvas ref={canvasRef} />
       <GameStatusMessage message={statusMessage} />
       {gameOver && (
         <GameOverPanel
@@ -54,3 +54,5 @@ export function SnakeGame() {
     </div>
   );
 }
+
+export default SnakeGame;

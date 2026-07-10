@@ -2,9 +2,9 @@ import {
   MAX_OBSTACLE_PLACEMENT_ATTEMPTS,
   OBSTACLE_SCORE_INTERVAL,
   OBSTACLE_SIZES,
-} from "./constants";
-import type { GameState } from "./game-state";
-import type { Obstacle, Position } from "./types";
+} from "@/components/games/Snake/lib/constants";
+import type { GameState } from "@/components/games/Snake/lib/game-state";
+import type { Obstacle, Position } from "@/components/games/Snake/lib/types";
 
 function isPositionOnSnake(position: Position, snake: Position[]): boolean {
   return snake.some(
