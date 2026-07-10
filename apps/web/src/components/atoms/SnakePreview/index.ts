@@ -1,1 +1,0 @@
-export { SnakePreview } from "./SnakePreview";

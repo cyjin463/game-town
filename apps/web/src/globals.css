@@ -1,0 +1,83 @@
+@import "./styles/tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply min-h-screen bg-[#d4d4d4];
+  }
+}
+
+@layer components {
+  .card {
+    @apply w-fit mx-auto rounded-2xl bg-surface shadow-elevated;
+  }
+
+  .overlay {
+    @apply fixed inset-0 z-modal flex items-center justify-center bg-overlay p-4;
+  }
+
+  .heading-page {
+    @apply text-2xl font-bold text-foreground drop-shadow-sm sm:text-3xl;
+  }
+
+  .text-body {
+    @apply text-sm leading-relaxed text-foreground-muted sm:text-base;
+  }
+
+  .text-error {
+    @apply text-danger;
+  }
+
+  .btn {
+    @apply inline-block cursor-pointer border-none font-semibold tracking-wide shadow-md transition-all duration-normal hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:shadow-sm disabled:cursor-not-allowed disabled:bg-surface-soft disabled:text-foreground-disabled disabled:shadow-sm disabled:hover:translate-y-0;
+  }
+
+  .btn-primary {
+    @apply btn border border-line-brand bg-gradient-to-br from-brand-600 to-brand-800 text-foreground-inverse hover:from-brand-500 hover:to-brand-700;
+  }
+
+  .btn-secondary {
+    @apply btn border border-line bg-gradient-to-br from-surface-muted to-surface-soft text-foreground-muted hover:from-surface-soft hover:to-line-strong hover:border-line-strong hover:text-foreground-link;
+  }
+
+  .btn-sm {
+    @apply rounded-lg px-4 py-2 text-sm;
+  }
+
+  .btn-md {
+    @apply rounded-button px-6 py-3 text-base;
+  }
+
+  .btn-lg {
+    @apply rounded-xl px-8 py-4 text-lg;
+  }
+
+  .heading-hero-gradient {
+    @apply bg-clip-text font-bold text-transparent;
+    background-image: linear-gradient(
+      120deg,
+      var(--color-foreground) 0%,
+      var(--color-foreground-muted) 22%,
+      var(--color-foreground-disabled) 45%,
+      var(--color-foreground-subtle) 50%,
+      var(--color-foreground-disabled) 55%,
+      var(--color-foreground-muted) 78%,
+      var(--color-foreground) 100%
+    );
+    background-size: 200% 200%;
+    animation: heading-gradient-slide 4s linear infinite;
+  }
+}
+
+@keyframes heading-gradient-slide {
+  0% {
+    background-position: 200% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
