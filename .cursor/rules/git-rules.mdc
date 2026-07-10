@@ -1,0 +1,299 @@
+---
+description: Git 명령 워크플로 — cmd 없이 Git 키워드만으로 실행 가능 (common-rule.mdc 확인 후 적용)
+alwaysApply: false
+---
+
+# Git Rules
+
+> Git 명령 키워드는 `cmd:` 없이 실행 가능하다 (common-rule Section 0 예외). 이 파일의 키워드가 아니면 Git 명령도 실행하지 않는다.
+
+## Rule Lookup Order
+
+1. Apply `common-rule.mdc` first.
+2. 메시지에 `|`가 있으면 **Chained Commands** 규칙 적용.
+3. 없으면 단일 키워드를 해당 섹션과 매칭하여 실행.
+4. Execute Git workflow via Shell. `cmd:` is NOT required.
+
+## Chained Commands (`|` 연동)
+
+> `|`로 여러 Git 키워드를 연결하면 **왼쪽부터 순서대로** 실행한다. 중간에 실패하면 중단하고 사용자에게 알린다.
+
+### 형식
+
+```
+<keyword1> | <keyword2> | <keyword3>
+```
+
+- `|` 앞뒤 공백은 무시한다.
+- 각 키워드는 Supported Keywords의 기존 규칙을 그대로 따른다.
+- 한 단계가 실패하면 이후 단계는 실행하지 않는다.
+
+### 실행 순서
+
+1. 메시지를 `|`로 분리한다.
+2. 각 토큰이 유효한 Git 키워드인지 확인한다.
+3. 1번 키워드부터 순서대로 해당 섹션 규칙에 따라 실행한다.
+4. `switch-<branch>` 실행 **직전**의 브랜치명을 기억한다 (`previousBranch`).
+5. 모든 단계 완료 후 결과 요약을 사용자에게 알린다.
+
+### `merge-@prev` (선택)
+
+> `switch-` 후 이전 작업 브랜치를 merge할 때, 브랜치명 대신 `merge-@prev`를 사용할 수 있다.
+
+- `merge-@prev` → `merge-<previousBranch>`로 치환하여 실행
+- `previousBranch`는 체인 시작 시점 또는 마지막 `switch-` 직전 브랜치
+- 명시적 브랜치명(`merge-feature/foo`)이 더 우선한다
+
+### 예시
+
+**작업 브랜치 push → dev merge → dev push**
+
+```
+push | switch-dev | merge-feature/foo | push
+```
+
+또는 이전 브랜치 자동 참조:
+
+```
+push | switch-dev | merge-@prev | push
+```
+
+| 단계 | 동작 |
+|------|------|
+| `push` | 현재 작업 브랜치를 origin에 push |
+| `switch-dev` | dev 브랜치로 이동 |
+| `merge-feature/foo` | dev에 feature/foo merge |
+| `push` | 현재 브랜치를 origin에 push (dev 반영 시 `switch-dev` 후 `push`) |
+
+**커밋 후 push**
+
+```
+commit-auto | push
+```
+
+**현재 브랜치 push 후 dev로 이동해 merge·push**
+
+```
+push | switch-dev | merge-@prev | push
+```
+
+### 주의
+
+- `switch-dev` 이후 현재 브랜치가 `dev`가 되므로, merge 대상 브랜치는 **작업 브랜치명을 명시**하거나 `merge-@prev`를 사용한다.
+- `commit` / `commit-auto`가 체인에 포함되면 Pre-Commit Checks(오타·빌드)도 각각 수행한다.
+- 체인 중 `merge-` 단계에서 충돌이 발생하면 **즉시 중단**한다. 이후 단계(`push` 등)는 실행하지 않는다.
+
+---
+
+## Supported Keywords
+
+> 단일 키워드 또는 `|`로 연결된 체인에서 사용한다.
+
+| Keyword | Section |
+|---------|---------|
+| `<kw1> \| <kw2> \| ...` | Chained Commands |
+| `fetch` | fetch |
+| `switch-<branchName>` | switch |
+| `checkout-<branchName>` | checkout |
+| `current-checkout-<branchName>` | current-checkout |
+| `Add-<fileName>` | add |
+| `commit` | commit |
+| `commit-auto` | commit-auto |
+| `push` | push |
+| `merge-<branchName>` | merge |
+
+## Commit Message Language
+
+> 모든 커밋 메시지는 **한글**로 작성한다. JIRA 티켓 접두어(`[XXX-123]`)가 있으면 메시지 맨 앞에 붙이고, 본문은 한글로 작성한다.
+
+- Language: Korean (한글)
+- JIRA prefix (if branch contains `XXX-123`): `[XXX-123] <한글 메시지>`
+- Example: `[DEV-123] Next.js 15 모노레포 스캐폴딩 추가`
+- Example (no JIRA): `Cursor rules 및 Git 워크플로 규칙 추가`
+
+## Pre-Commit Checks (`commit`, `commit-auto` 공통)
+
+> 커밋 전 반드시 오타 검사 → 빌드 검사를 수행한다. 실패 시 사용자에게 알리고 커밋을 중단한다.
+
+`commit`, `commit-auto` 실행 시 아래 순서를 **반드시** 따른다:
+
+```
+1. git status + git diff로 변경 파일 확인
+2. 오타 검사
+   ├─ 오타 있음 → 목록을 사용자에게 알림, 커밋 중단
+   └─ 오타 없음 → 3번으로
+3. pnpm build 실행 (모노레포 루트)
+   ├─ 빌드 실패 → 오류 내용 알림, 커밋 중단
+   └─ 빌드 성공 → 4번으로 (commit / commit-auto 본문 진행)
+```
+
+### 오타 검사 범위
+
+- 변경된 파일의 주석, 문자열, README, 룰 파일 등 사용자에게 보이는 텍스트
+- 변수명·import 경로의 명백한 오타
+- 한영 혼용·철자 오류 (예: `스케폴딩` → `스캐폴딩`)
+
+### 오타 발견 시
+
+- 파일 경로, 해당 내용, 수정 제안을 사용자에게 알린다.
+- 커밋하지 않는다. 사용자가 수정 후 다시 `commit` 또는 `commit-auto`를 요청할 때까지 대기한다.
+
+### 빌드 검사
+
+cmd:
+pnpm build
+
+- 모노레포 루트에서 실행한다.
+- 빌드 실패 시 오류 로그를 사용자에게 보여주고 커밋을 중단한다.
+
+---
+
+## fetch
+
+> 현재 브랜치의 원격(upstream) 정보를 가져온다.
+
+cmd:
+git fetch origin
+
+If upstream exists, also:
+
+cmd:
+git fetch origin <current-branch>
+
+---
+
+## switch
+
+> `switch-<branchName>` — 로컬에 있으면 이동. 없으면 "브랜치가 존재하지 않습니다" 알림.
+
+1. Check: `git branch --list <branchName>`
+2. If exists → `git switch <branchName>`
+3. If not → inform user. Do not create or fetch.
+
+---
+
+## checkout
+
+> `checkout-<branchName>` — 있으면 이동. 없으면 fetch → 원격 있으면 pull 후 이동 → 없으면 생성.
+
+1. Local exists → `git switch <branchName>`
+2. Not local → `git fetch origin`
+3. Remote exists → `git switch <branchName>` (behind → `git pull origin <branchName>`)
+4. Remote absent → `git switch -c <branchName>`
+
+---
+
+## current-checkout
+
+> `current-checkout-<branchName>` — 현재 작업 상태 유지하며 이동 또는 생성.
+
+1. Exists → `git switch <branchName>`
+2. Not exists → `git switch -c <branchName>`
+
+Warn if uncommitted changes may conflict.
+
+---
+
+## add
+
+> `Add-<fileName>` — 지정 파일만 스테이징.
+
+cmd:
+git add <fileName>
+
+---
+
+## commit
+
+> `commit` — Pre-Commit Checks 통과 후, 전체 add 및 `commit` 뒤 **한글** 메시지로 커밋.
+
+1. Pre-Commit Checks 수행 (오타 검사 → `pnpm build`)
+2. 통과 시:
+
+cmd:
+git add -A
+
+cmd:
+git commit -m "<user-provided message in Korean>"
+
+---
+
+## commit-auto
+
+> `commit-auto` — Pre-Commit Checks 통과 후, **한글** 메시지 자동 생성 및 커밋. JIRA 티켓(`XXX-123`) 있으면 `[XXX-123]` 접두.
+
+1. Pre-Commit Checks 수행 (오타 검사 → `pnpm build`)
+2. `git status` + `git diff`로 변경 확인
+3. **한글** 커밋 메시지 생성 (브랜치명에서 JIRA 패턴 추출)
+4. 사용자에게 메시지 표시 후 실행
+
+Format: `[XXX-123] <한글 설명>` or `<한글 설명>`
+
+cmd:
+git add -A
+
+cmd:
+git commit -m "[XXX-123] <auto-generated Korean message>"
+
+---
+
+## push
+
+> `push` — **현재 브랜치**를 origin에 push. upstream 없으면 `-u`. dev push는 `switch-dev` 후 `push`를 사용한다.
+
+Upstream not set:
+
+cmd:
+git push -u origin <current-branch>
+
+Upstream set:
+
+cmd:
+git push
+
+**dev 브랜치 push 예시 (push-dev 대체):**
+
+```
+switch-dev | push
+```
+
+---
+
+## merge
+
+> `merge-<branchName>` — 현재 브랜치에 branchName merge. **충돌 시 사용자가 수동 해결한다. AI는 임의로 수정하지 않는다.**
+
+1. 충돌 가능성이 있으면 사전 경고한다.
+2. merge 실행:
+
+cmd:
+git merge <branchName>
+
+3. 충돌 없으면 `git status`로 결과 확인 후 완료 알림.
+
+### Merge Conflict Policy (충돌 시)
+
+> merge 충돌은 **사용자가 직접** 해결한다. AI는 충돌 파일을 임의로 수정하지 않는다.
+
+**충돌 발생 시 AI가 할 일:**
+
+1. merge 및 체인(있는 경우) **즉시 중단**
+2. 충돌 난 파일 목록을 사용자에게 알림
+3. `git status` 결과 공유
+4. 사용자가 직접 수정할 때까지 대기
+
+**절대 금지:**
+
+- 충돌 마커(`<<<<<<<`, `=======`, `>>>>>>>`)가 있는 파일을 AI가 임의로 편집
+- ours/theirs 중 한쪽을 임의로 선택하여 merge
+- `git checkout --ours` / `git checkout --theirs` 임의 실행
+- 충돌 해결을 "편하게" 자동 처리
+- `git merge --abort`를 사용자 요청 없이 실행
+- `git add` / `git commit`으로 충돌 해결을 대신 완료
+
+**사용자가 수동 해결 후:**
+
+- 사용자가 충돌 해결을 완료했다고 알리거나, `cmd:` / Git 키워드로 다음 작업을 요청할 때까지 대기
+- 이후 `commit`, `push` 등은 사용자 지시에 따라 진행
+
+---

@@ -22,7 +22,7 @@ export const Leaderboard = () => {
     return (
       <section className={panelClassName}>
         <h2 className={titleClassName}>이번주 TOP10</h2>
-        <p className="text-error text-sm">랭킹을 불러오지 못했습니다.</p>
+        <p className="text-error text-sm">불러오지 못했습니다.</p>
       </section>
     );
   }

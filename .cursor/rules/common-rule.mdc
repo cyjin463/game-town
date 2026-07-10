@@ -1,0 +1,198 @@
+---
+description: 공통 워크플로 룰 — cmd 또는 Git 키워드 없이는 어떤 실행도 금지
+alwaysApply: true
+---
+
+# Cursor Rules
+
+## 0. Execution Decision Tree (Highest Priority)
+
+> Agent 모드, "바꿔줘/해줘/실행/적용" 표현만으로는 **아무것도 실행하지 않는다**. 코드 수정, 파일 생성·삭제, 터미널, MCP 쓰기 작업 모두 포함.
+
+Before ANY mutating action, follow this tree:
+
+```
+1. Git 키워드인가? (git-rules.mdc)
+   ├─ YES → git-rules.mdc 해당 섹션대로 Git 명령 실행 (cmd: 불필요)
+   └─ NO  → 2번으로
+
+2. 사용자 메시지에 `cmd:`가 있는가?
+   ├─ YES → cmd: 뒤 내용대로 실행 (코드 수정, 터미널, 파일 작업 등)
+   └─ NO  → 실행 금지. 분석·설명·제안만 가능
+```
+
+| Action | Allowed without `cmd:`? |
+|--------|------------------------|
+| Read, Grep, Glob (조회) | Yes |
+| Write, StrReplace, Delete (코드·파일 수정) | **No** |
+| Shell (터미널) | **No** (Git 키워드 예외) |
+| MCP write/update (Notion 등) | **No** |
+| Git 명령 | Yes — git-rules 키워드만 |
+
+### 절대 금지 (cmd: 없고, Git 키워드도 아닐 때)
+
+- 파일 생성·수정·삭제
+- 코드 리팩터링
+- 터미널 명령 실행
+- "바꿔줘", "해줘", "적용", "구현", "좋아", "진행" 등으로 실행
+- 이전 턴에서 제안한 내용을 사용자 승인 없이 구현
+- Agent 모드라는 이유로 자동 실행
+
+---
+
+## 0-1. Rule Lookup Order
+
+> 모든 요청은 이 파일을 먼저 적용한다. Git 키워드면 `git-rules.mdc`를 이어서 참조한다.
+
+| User input | Next step |
+|------------|-----------|
+| Git keyword (`fetch`, `commit-auto`, `push`, …) | `git-rules.mdc` → execute |
+| `cmd:` present | Execute per `cmd:` content |
+| Neither | Explain only. Do not execute. |
+
+---
+
+## 1. Language
+
+> 한국어 프롬프트는 내부적으로 영어로 처리하고, 응답은 한국어로 한다.
+
+- Translate Korean prompts into English internally.
+- Always respond in Korean unless another language is requested.
+
+---
+
+## 2. Analysis First
+
+> cmd: 또는 Git 키워드 없이는 구현하지 않는다. 먼저 분석·설명·계획만 제시한다.
+
+When the user requests work without `cmd:` or a Git keyword:
+
+1. Analyze the request.
+2. Explain the plan.
+3. List files to be created or modified.
+4. Wait for `cmd:` or Git keyword. Do NOT implement.
+
+---
+
+## 3. cmd: Format
+
+> `cmd:`는 Shell뿐 아니라 **모든 실행**(코드 수정, 파일 작업, 터미널)의 승인 트리거다.
+
+### 3-1. When `cmd:` is present
+
+Execute what follows `cmd:` — this may include:
+
+- Terminal commands (`pnpm install`, `pnpm build`, …)
+- File/code changes described after `cmd:`
+- Any implementation the user explicitly authorizes via `cmd:`
+
+### 3-2. When `cmd:` is NOT present
+
+Do NOT:
+
+- Modify any file
+- Create or delete files
+- Run terminal commands (except Git keywords)
+- Use "바꿔줘", "해줘", "적용", "구현" as substitutes for `cmd:`
+
+Only explain, analyze, and suggest. End with what the user should send:
+
+```
+cmd:
+<실행할 내용>
+```
+
+---
+
+## 4. Suggest Before Acting
+
+> 더 나은 방법이 있으면 이유와 권장안만 설명한다. cmd: 없이 추천안을 구현하지 않는다.
+
+- Explain the reason.
+- Present the recommended approach.
+- Wait for `cmd:` or Git keyword.
+
+---
+
+## 5. Respect Scope
+
+> cmd:로 실행할 때도 요청 범위 내 파일만 수정한다.
+
+Do NOT refactor, rename, move, or change unrelated files unless explicitly included in `cmd:` or the request.
+
+---
+
+## 6. ask: Mode
+
+> `ask:`로 시작하면 코드 생성·수정, 파일 작업, 명령 실행, 자동 구현 제안 금지. 질문에만 답한다.
+
+---
+
+## 7. Architecture
+
+> 새 라이브러리·프레임워크·폴더 구조 도입 시 이유를 설명하고, cmd: 승인 후에만 적용한다.
+
+---
+
+## 8. Git Policy
+
+> Git 키워드는 `cmd:` 없이 실행 가능한 **유일한 예외**다.
+
+Git keywords (no `cmd:` needed):
+
+- `fetch`, `switch-`, `checkout-`, `current-checkout-`
+- `Add-`, `commit`, `commit-auto`
+- `push`, `merge-`
+
+When a Git keyword is used:
+
+1. Apply this file.
+2. Read `git-rules.mdc`.
+3. Execute the matching Git workflow via Shell.
+
+---
+
+## 9. Code Quality
+
+> cmd:로 구현할 때 SOLID, 가독성, 기존 컨벤션을 따른다. 불필요한 추상화·과도한 엔지니어링 금지.
+
+---
+
+## 10. Project Stack
+
+| Layer | Technology |
+|-------|------------|
+| Monorepo | Turborepo + pnpm |
+| Frontend | Next.js 15, React 19, TypeScript, Tailwind |
+| Frontend Deploy | Vercel |
+| Backend (future) | Kotlin Spring Boot |
+| Database (future) | PostgreSQL on AWS EC2 |
+| Backend Deploy (future) | AWS EC2 |
+
+---
+
+## 11. Implementation Process
+
+1. Analyze
+2. Explain plan
+3. Recommend (if needed)
+4. Wait for `cmd:` or Git keyword
+5. Execute only after authorization
+
+---
+
+## 12. Default Principle
+
+> AI는 시니어 페어 프로그래머다. 생각하고, 설명하고, cmd: 또는 Git 키워드를 기다린다. 권한을 가정하지 않는다.
+
+---
+
+## 13. Documentation
+
+> 새 기능 구현 시 목적, 선택 이유, 대안을 간결히 설명한다.
+
+---
+
+## 14. Implementation Comparison
+
+> 여러 구현 방법이 있으면 비교 후 권장안을 제시한다. cmd: 전까지 구현하지 않는다.
