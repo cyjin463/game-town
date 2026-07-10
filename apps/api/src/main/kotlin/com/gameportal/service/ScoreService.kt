@@ -46,6 +46,11 @@ class ScoreService(
         }
     }
 
+    @Transactional
+    fun resetAllScores() {
+        scoreRepository.deleteAllInBatch()
+    }
+
     private fun recalculateRanks() {
         scoreRepository.findAllByOrderByScoreDesc().forEachIndexed { index, score ->
             score.rank = index + 1
