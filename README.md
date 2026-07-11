@@ -1,166 +1,189 @@
-# 게임 포털
+# dev37 게임 타운
 
-Next.js + TypeScript + Kotlin Spring Boot로 구축된 웹게임 포털 사이트입니다. **완전 무료**로 개발 및 배포 가능합니다!
+브라우저에서 즐기는 웹게임 포털입니다. Turborepo 모노레po로 Next.js 프론트엔드와 Kotlin Spring Boot API를 함께 관리합니다.
 
-## 🏗️ 아토믹 디자인 구조
+- **프론트엔드:** [game-town-web.vercel.app](https://game-town-web.vercel.app)
+- **백엔드 API:** [game-town-fmzk.onrender.com](https://game-town-fmzk.onrender.com)
+- **저장소:** [github.com/cyjin463/game-town](https://github.com/cyjin463/game-town)
 
-```
-apps/web/src/
-├── components/
-│   ├── atoms/           # 원자 컴포넌트 (가장 작은 단위)
-│   │   ├── Button/
-│   │   ├── Input/
-│   │   └── SnakePreview/
-│   ├── molecules/       # 분자 컴포넌트 (원자들의 조합)
-│   │   ├── AuthForm/
-│   │   └── GameCard/
-│   ├── organisms/       # 유기체 컴포넌트 (분자들의 조합)
-│   │   ├── AuthModal/
-│   │   └── GameList/
-│   └── templates/       # 템플릿 (페이지 레이아웃)
-│       └── HomeTemplate/
-├── games/               # 게임 컴포넌트들
-│   └── snake/
-├── styles/              # 전역 스타일
-└── app/                 # Next.js App Router
-    ├── games/
-    │   └── snake/
-    └── page.tsx
-```
+## 주요 기능
 
-## 🎮 현재 구현된 게임
+- **지렁이 게임** — 방향키(PC) / 화면 탭(모바일) 조작
+- **회원 인증** — JWT 기반 로그인·회원가입, 세션 복원
+- **주간 리더보드** — TOP 10 순위, 매주 월요일 00:00(KST) 초기화
+- **내 최고점** — 로그인 사용자 개인 기록 조회 및 최고점만 갱신
+- **Open Graph** — 카카오톡·SNS 링크 미리보기 지원
 
-### 지렁이 게임
+## 기술 스택
 
-- **기능**: 클래식 스네이크 게임
-- **특징**:
-  - 방향키로 조작
-  - 먹이를 먹어서 성장
-  - 100점마다 장애물 생성
-  - 30점마다 속도 증가
-  - 무채색 디자인
+| 구분 | 기술 |
+|------|------|
+| Frontend | Next.js 15, React 19, TypeScript, Tailwind CSS, TanStack Query |
+| Backend | Kotlin, Spring Boot 3.2, Spring Security, JWT, JPA |
+| Database | Supabase (PostgreSQL) |
+| Monorepo | Turborepo, pnpm workspace |
+| Frontend 배포 | Vercel |
+| Backend 배포 | Render (Docker) |
 
-## 🔐 인증 시스템
-
-- **회원가입**: 아이디, 비밀번호, 비밀번호 확인, 비밀번호 힌트
-- **로그인**: 아이디, 비밀번호
-- **보안**: JWT 토큰 기반 인증, BCrypt 비밀번호 해싱
-- **데이터베이스**: Supabase (PostgreSQL)
-
-## 🚀 개발 환경 설정
-
-### 전체 (Turborepo + pnpm)
-
-```bash
-# 루트에서 의존성 설치
-pnpm install
-
-# 프론트엔드 개발 서버
-pnpm dev
-
-# 프론트엔드 빌드
-pnpm build
-
-# 프론트엔드 프로덕션 서버
-pnpm start
-```
-
-### API (Kotlin Spring Boot + Supabase)
-
-1. [Supabase](https://supabase.com)에서 프로젝트 생성
-2. `apps/api/.env.example`을 복사해 `apps/api/.env` 작성
-3. Supabase Dashboard > **Project Settings > Database > Connection string (JDBC)** 값 입력
-
-```bash
-cp apps/api/.env.example apps/api/.env
-# .env 파일에 DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD 설정
-
-pnpm dev:api
-```
-
-## 📁 Monorepo 구조
+## Monorepo 구조
 
 ```
 pixel-worm/
 ├── apps/
-│   ├── web/              # Next.js 프론트엔드
-│   └── api/              # Kotlin Spring Boot API
-├── package.json
+│   ├── web/                    # Next.js 프론트엔드
+│   │   ├── public/             # 정적 파일 (og-image.png 등)
+│   │   └── src/
+│   │       ├── app/            # App Router (layout, pages)
+│   │       ├── components/     # 페이지·게임별 컴포넌트
+│   │       │   ├── Home/
+│   │       │   └── games/Snake/
+│   │       ├── shared/         # 공통 Atomic Design 컴포넌트
+│   │       ├── providers/      # AuthProvider, QueryProvider
+│   │       ├── hooks/
+│   │       └── lib/            # API 클라이언트, 게임 메타 등
+│   └── api/                    # Kotlin Spring Boot API
+│       ├── Dockerfile
+│       └── src/main/kotlin/com/gameportal/
+├── .github/workflows/          # CI (dev → main PR 빌드)
+├── render.yaml                 # Render 배포 설정
+├── turbo.json
 ├── pnpm-workspace.yaml
-└── turbo.json
+└── package.json
 ```
 
-## 📁 폴더 구조 설명
+## 지렁이 게임
 
-### Atoms (원자)
+| 항목 | 내용 |
+|------|------|
+| 조작 | PC: 방향키 / 모바일: 탭(시계방향 회전) |
+| 점수 | 먹이 1개당 +10점 |
+| 속도 | 40 / 110 / 160 / 300점 구간별 5단계 가속 |
+| 장애물 | 30점마다 랜덤 크기(1×1 ~ 3×3) 생성 |
+| 점수 저장 | 로그인 사용자, 기존 최고점보다 높을 때만 제출 |
 
-- **Button**: 재사용 가능한 버튼 컴포넌트
-- **Input**: 재사용 가능한 입력 필드 컴포넌트
-- **SnakePreview**: 게임 미리보기용 지렁이 컴포넌트
+## API
 
-### Molecules (분자)
+Next.js `rewrites`로 `/api/*` 요청을 백엔드로 프록시합니다.
 
-- **AuthForm**: 로그인/회원가입 폼 컴포넌트
-- **GameCard**: 게임 정보를 표시하는 카드 컴포넌트
+### Auth (`/api/auth`)
 
-### Organisms (유기체)
+| Method | Path | 인증 | 설명 |
+|--------|------|------|------|
+| POST | `/register` | - | 회원가입 + JWT 발급 |
+| POST | `/login` | - | 로그인 + JWT 발급 |
+| GET | `/me` | JWT | 현재 사용자 확인 |
 
-- **AuthModal**: 인증 모달 컴포넌트
-- **GameList**: 게임 목록을 관리하는 컴포넌트
+### Scores (`/api/scores`)
 
-### Templates (템플릿)
+| Method | Path | 인증 | 설명 |
+|--------|------|------|------|
+| POST | `/` | JWT | 점수 제출 (최고점만 갱신) |
+| GET | `/leaderboard` | - | TOP 10 리더보드 |
+| GET | `/me` | JWT | 내 점수·순위 (기록 없으면 null) |
 
-- **HomeTemplate**: 홈페이지 레이아웃
+## 로컬 개발
 
-### Games (게임)
+### 사전 요구
 
-- **snake**: 지렁이 게임 컴포넌트
+- Node.js 24+
+- pnpm 11+
+- Java 17+ (백엔드)
+- Supabase PostgreSQL (또는 로컬 PostgreSQL)
 
-## 🎯 기술 스택
+### 1. 의존성 설치
 
-### Frontend
+```bash
+pnpm install
+```
 
-- **Framework**: Next.js 15, React 19, TypeScript
-- **Styling**: Tailwind CSS
-- **Monorepo**: Turborepo + pnpm
-- **Architecture**: Atomic Design
-- **Build Tool**: Next.js (Webpack)
+### 2. 백엔드 환경 변수
 
-### Backend
+```bash
+cp apps/api/.env.example apps/api/.env
+```
 
-- **Language**: Kotlin
-- **Framework**: Spring Boot 3.2.0
-- **Database**: Supabase (PostgreSQL)
-- **Security**: Spring Security + JWT
-- **Build Tool**: Gradle
+`apps/api/.env`에 Supabase JDBC 연결 정보와 JWT 시크릿을 설정합니다.
 
-## 💰 무료 호스팅 가이드
+```env
+DATABASE_URL=jdbc:postgresql://db.YOUR_PROJECT_REF.supabase.co:5432/postgres?sslmode=require
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=your-password
+JWT_SECRET=your-secret-key-at-least-32-chars
+```
 
-### 프론트엔드 배포 (Vercel - 무료)
+### 3. 실행
 
-1. GitHub에 코드 푸시
-2. Vercel 계정 생성
-3. GitHub 저장소 연결
-4. 자동 배포 완료
+```bash
+# 터미널 1 — API (http://localhost:8080)
+pnpm dev:api
 
-### 백엔드 배포 (Railway - 무료)
+# 터미널 2 — Web (http://localhost:3000)
+pnpm dev
+```
 
-1. GitHub에 코드 푸시
-2. Railway 계정 생성
-3. GitHub 저장소 연결
-4. 환경변수 설정
-5. 자동 배포 완료
+프론트엔드는 `API_URL` 미설정 시 `http://localhost:8080`으로 API를 프록시합니다.
 
-## 🔮 향후 계획
+### 빌드
 
-- [ ] 테트리스 게임 추가
-- [ ] 2048 게임 추가
-- [ ] 퀴즈 게임 추가
-- [ ] 게임 점수 저장 시스템
-- [ ] 사용자 프로필 관리
-- [ ] 실시간 채팅 기능
-- [ ] 무료 클라우드 배포 자동화
+```bash
+pnpm build        # 프론트엔드
+pnpm build:api    # 백엔드
+pnpm lint         # ESLint
+```
 
-## 📝 라이선스
+## 배포
 
-MIT License - 완전 무료 사용 가능
+### 프론트엔드 (Vercel)
+
+1. GitHub 저장소 연결
+2. Root Directory: `apps/web` (또는 monorepo 설정)
+3. 환경 변수
+
+| 변수 | 설명 |
+|------|------|
+| `API_URL` | 백엔드 URL (예: `https://game-town-fmzk.onrender.com`) |
+| `NEXT_PUBLIC_SITE_URL` | (선택) OG 메타용 프로덕션 도메인 |
+
+### 백엔드 (Render + Docker)
+
+`render.yaml` 또는 Render 대시보드에서 Docker 서비스로 배포합니다.
+
+- **Dockerfile:** `apps/api/Dockerfile`
+- **Docker Context:** `apps/api`
+- **Health Check:** `/api/scores/leaderboard`
+
+| 변수 | 설명 |
+|------|------|
+| `DATABASE_URL` | Supabase JDBC URL |
+| `DATABASE_USERNAME` | DB 사용자 |
+| `DATABASE_PASSWORD` | DB 비밀번호 |
+| `JWT_SECRET` | JWT 서명 키 |
+
+> Turborepo 구조에서 `apps/api/package.json` 때문에 Render가 Node 프로젝트로 인식할 수 있어, **Docker 런타임**으로 배포하는 것을 권장합니다.
+
+## CI
+
+`dev` → `main` PR 생성 시 GitHub Actions에서 프론트엔드 빌드를 검증합니다.
+
+- 워크플로: `.github/workflows/pr-dev-to-main-build.yml`
+- Node.js 24, pnpm 11.5.0
+
+## 브랜치 전략
+
+| 브랜치 | 용도 |
+|--------|------|
+| `main` | 프로덕션 |
+| `dev` | 개발 통합 |
+| `feature/GT-N` | 기능별 작업 |
+
+## 향후 계획
+
+- [ ] 테트리스
+- [ ] 총알 피하기
+- [ ] 지뢰찾기
+- [ ] 사용자 프로필
+- [ ] 추가 게임별 리더보드
+
+## 라이선스
+
+MIT License
