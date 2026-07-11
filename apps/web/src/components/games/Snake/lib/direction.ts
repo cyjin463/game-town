@@ -12,3 +12,14 @@ export function getDirectionFromKey(key: string): string | null {
       return null;
   }
 }
+
+const CLOCKWISE: Record<string, string> = {
+  up: "right",
+  right: "down",
+  down: "left",
+  left: "up",
+};
+
+export function rotateClockwise(direction: string): string {
+  return CLOCKWISE[direction] ?? "right";
+}

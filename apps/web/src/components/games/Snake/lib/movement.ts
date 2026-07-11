@@ -1,4 +1,4 @@
-import { getDirectionFromKey } from "@/components/games/Snake/lib/direction";
+import { getDirectionFromKey, rotateClockwise } from "@/components/games/Snake/lib/direction";
 import type { GameState } from "@/components/games/Snake/lib/game-state";
 import type { Position } from "@/components/games/Snake/lib/types";
 
@@ -48,4 +48,8 @@ export function applyKeyboardDirection(game: GameState, key: string): boolean {
 
   queueDirection(game, direction);
   return true;
+}
+
+export function applyTouchTurn(game: GameState): void {
+  queueDirection(game, rotateClockwise(game.nextDirection));
 }

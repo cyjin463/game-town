@@ -7,7 +7,7 @@ import {
   resetGameState,
   type GameState,
 } from "@/components/games/Snake/lib/game-state";
-import { applyKeyboardDirection } from "@/components/games/Snake/lib/movement";
+import { applyKeyboardDirection, applyTouchTurn } from "@/components/games/Snake/lib/movement";
 
 export function useSnakeGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -16,8 +16,16 @@ export function useSnakeGame() {
   const [length, setLength] = useState(5);
   const [gameOver, setGameOver] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   const gameRef = useRef<GameState>(createInitialGameState());
+
+  useEffect(() => {
+    setIsTouchDevice(
+      window.matchMedia("(pointer: coarse)").matches ||
+        navigator.maxTouchPoints > 0
+    );
+  }, []);
 
   const ensureIdleBoard = useCallback(() => {
     const game = gameRef.current;
@@ -110,11 +118,36 @@ export function useSnakeGame() {
     return () => document.removeEventListener("keydown", handleKeyPress);
   }, [gameRunning, gameOver, startGame]);
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !isTouchDevice) return;
+
+    const handleTouch = (e: TouchEvent) => {
+      if (gameOver) return;
+
+      e.preventDefault();
+
+      if (!gameRunning) {
+        startGame("right");
+        return;
+      }
+
+      applyTouchTurn(gameRef.current);
+    };
+
+    canvas.addEventListener("touchstart", handleTouch, { passive: false });
+    return () => canvas.removeEventListener("touchstart", handleTouch);
+  }, [gameRunning, gameOver, startGame, isTouchDevice]);
+
   const statusMessage = gameRunning
-    ? "방향키로 지렁이를 조작하세요!"
+    ? isTouchDevice
+      ? "화면을 터치하면 시계 방향으로 회전합니다!"
+      : "방향키로 지렁이를 조작하세요!"
     : gameOver
       ? "다시 시작하려면 버튼을 누르세요."
-      : "방향키를 눌러 게임을 시작하세요!";
+      : isTouchDevice
+        ? "화면을 터치해 게임을 시작하세요!"
+        : "방향키를 눌러 게임을 시작하세요!";
 
   return {
     canvasRef,

@@ -13,7 +13,7 @@ export const SnakeCanvas = React.forwardRef<HTMLCanvasElement, SnakeCanvasProps>
       width={width}
       height={height}
       className={cn(
-        "mx-auto my-4 block h-[300px] w-[300px] rounded-xl border-4 border-line-game bg-canvas shadow-lg",
+        "mx-auto my-4 block h-[300px] w-[300px] touch-none rounded-xl border-4 border-line-game bg-canvas shadow-lg",
         className
       )}
       {...props}
