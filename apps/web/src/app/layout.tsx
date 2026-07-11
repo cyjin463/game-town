@@ -11,7 +11,7 @@ import { Footer } from "@/shared/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 const ogImage = {
-  url: "/icon.png",
+  url: "/og-image.png",
   width: 512,
   height: 512,
   alt: SITE_NAME,
