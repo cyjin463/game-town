@@ -12,8 +12,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 const ogImage = {
   url: "/og-image.png",
-  width: 512,
-  height: 512,
+  width: 1200,
+  height: 630,
   alt: SITE_NAME,
 };
 
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     images: [ogImage],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
     images: [ogImage.url],
